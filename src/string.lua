@@ -1,0 +1,96 @@
+local string_x = {}
+
+function string_x.sep_case(s, sep)
+    return s:gsub("(%u+)(%u%l)", "%1" .. sep .. "%2"):gsub("(%l%d)(%u)", "%1" .. sep .. "%2"):gsub("[%s_-]+", sep):lower()
+end
+
+function string_x.snake_case(s)
+    return s:gsub("(%l)(%u)", "%1_%2"):gsub("[%s%-]+", "_"):lower()
+end
+
+function string_x.kebab_case(s, should_snakecase)
+    s = should_snakecase and string_x.snake_case(s) or s
+    return s:gsub("(%u+)(%u%l)", "%1-%2"):gsub("(%l%d)(%u)", "%1-%2"):gsub("[%s_]+", "-"):lower()
+end
+
+function string_x.capitalize(s)
+    if s == "" then
+        return s
+    end
+
+    return s:sub(1, 1):upper() .. s:sub(2)
+end
+
+function string_x.trim(s)
+    return s:match("^%s*(.-)%s*$")
+end
+
+function string_x.pad_left(s, width, char)
+    char = char or " "
+
+    local padding = width - #s
+
+    if padding <= 0 then
+        return s
+    end
+
+    return char:rep(padding) .. s
+end
+
+function string_x.pad_right(s, width, char)
+    char = char or " "
+
+    local padding = width - #s
+
+    if padding <= 0 then
+        return s
+    end
+
+    return s .. char:rep(padding)
+end
+
+function string_x.center(s, width, char)
+    char = char or " "
+
+    local padding = width - #s
+
+    if padding <= 0 then
+        return s
+    end
+
+    local left = math.floor(padding / 2)
+    local right = padding - left
+
+    return char:rep(left) .. s .. char:rep(right)
+end
+
+function string_x.is_alpha(c)
+    return c:match("[a-zA-Z_]") ~= nil
+end
+
+function string_x.is_digit_byte(c)
+    local b = c:byte()
+    return b >= 48 and b <= 57
+end
+
+function string_x.is_digit(c)
+    return c:match("[0-9]") ~= nil
+end
+
+function string_x.is_alpha_numeric(c)
+    return string_x.is_alpha(c) or string_x.is_digit(c)
+end
+
+function string_x.is_blank(s)
+    return s:match("^%s*$") ~= nil
+end
+
+function string_x.starts_with(s, prefix)
+    return s:sub(1,1) == prefix
+end
+
+function string_x.ends_with(s,suffix)
+    return s:sub(#s,#s) == suffix
+end
+
+return string_x
