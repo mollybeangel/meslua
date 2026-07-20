@@ -4,6 +4,14 @@ function string_x.sep_case(s, sep)
     return s:gsub("(%u+)(%u%l)", "%1" .. sep .. "%2"):gsub("(%l%d)(%u)", "%1" .. sep .. "%2"):gsub("[%s_-]+", sep):lower()
 end
 
+function string_x.pascal_case(s)
+    return (s:gsub("^%l", string.upper):gsub("[_%-%s]+(%l)", string.upper):gsub("[_%-%s]+", ""))
+end
+
+function string_x.camel_case(s)
+    return (string_x.pascal_case(s):gsub("^%u", string.lower))
+end
+
 function string_x.snake_case(s)
     return s:gsub("(%l)(%u)", "%1_%2"):gsub("[%s%-]+", "_"):lower()
 end
@@ -13,12 +21,30 @@ function string_x.kebab_case(s, should_snakecase)
     return s:gsub("(%u+)(%u%l)", "%1-%2"):gsub("(%l%d)(%u)", "%1-%2"):gsub("[%s_]+", "-"):lower()
 end
 
+function string_x.title_case(s)
+    return (s:gsub("(%a)([%w_]*)", function(first, rest)
+        return first:upper() .. rest:lower()
+    end))
+end
+
 function string_x.capitalize(s)
     if s == "" then
         return s
     end
 
     return s:sub(1, 1):upper() .. s:sub(2)
+end
+
+function string_x.split(s, sep)
+    sep = sep or " "
+
+    local result = {}
+
+    for part in (s .. sep):gmatch("(.-)" .. sep) do
+        result[#result + 1] = part
+    end
+
+    return result
 end
 
 function string_x.trim(s)

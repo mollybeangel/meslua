@@ -1,3 +1,4 @@
+--TODO: Implement
 local crypto = {}
 
 function crypto.hash()

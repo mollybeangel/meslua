@@ -2,4 +2,4 @@
 
 # meslua
 
-A utils library for lua
+A library that adds essential lua functions

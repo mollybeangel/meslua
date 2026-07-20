@@ -120,6 +120,36 @@ function table_x.some(t, fn)
     return false
 end
 
+function table_x.reduce(t, fn, initial)
+    local accumulator = initial
+
+    for i = 1, #t do
+        accumulator = fn(accumulator, t[i], i)
+    end
+
+    return accumulator
+end
+
+function table_x.values(t)
+    local new_t = {}
+
+    for k, v in next, t do
+        table.insert(new_t, v)
+    end
+
+    return new_t
+end
+
+function table_x.keys(t)
+    local new_t = {}
+
+    for k, v in next, t do
+        table.insert(new_t,k)
+    end
+
+    return new_t
+end
+
 function table_x.copy(t, should_preserve_mt)
     should_preserve_mt = should_preserve_mt == nil and true or should_preserve_mt
 
