@@ -1,5 +1,8 @@
-local mlib = {}
+if type(...) == "number" then
+    return error(string.format("Expected file path got '%d'",({...})[1]))
+end
 
+local mlib = {}
 local cwd = (...):gsub('%.init$', '') .. "."
 
 mlib.table = require(cwd .. "table")
