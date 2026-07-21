@@ -1,5 +1,7 @@
 local string_x = {}
 
+local DEFAULT_CHARSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+
 local old_index_fn = nil
 local str_literal_mt = nil
 
@@ -70,6 +72,19 @@ function string_x.split(s, sep)
     end
 
     return result
+end
+
+function string_x.random(length, charset)
+    charset = charset or DEFAULT_CHARSET
+
+    local output = {}
+
+    for i = 1, length do
+        local index = math.random(#charset)
+        output[i] = charset:sub(index, index)
+    end
+
+    return table.concat(output)
 end
 
 function string_x.trim(s)

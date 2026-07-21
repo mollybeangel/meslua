@@ -32,6 +32,36 @@ function math_x.trunc(x)
     return x < 0 and math.ceil(x) or math.floor(x)
 end
 
+function math_x.to_hex(n,include_prefix)
+    local hex = string.format("%X", n)
+    include_prefix = include_prefix == nil and true or include_prefix
+    return include_prefix and "0x" .. hex or hex
+end
+
+function math_x.hex_to_rgb(hex)
+    assert(type(hex) == "string", "Expected string for hex_to_rgb")
+
+    hex = hex:gsub("^#", "")
+    hex = hex:gsub("^0[xX]", "")
+
+    assert(#hex == 6, "Expected a 6-digit hex color")
+
+    return
+        tonumber(hex:sub(1, 2), 16),
+        tonumber(hex:sub(3, 4), 16),
+        tonumber(hex:sub(5, 6), 16)
+end
+
+function math_x.rgb_to_hex(r, g, b)
+    return string.format("%02X%02X%02X", r, g, b)
+end
+
+function math_x.from_hex(hex)
+    assert(type(hex) == "string", "Expected string for from_hex")
+    hex = hex:gsub("^0[xX]", "")
+    return tonumber(hex, 16)
+end
+
 function math_x.remap(x, old_min, old_max, new_min, new_max)
     local t = (x - old_min) / (old_max - old_min)
     return new_min + t * (new_max - new_min)

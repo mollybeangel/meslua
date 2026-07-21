@@ -49,7 +49,7 @@ function table_x.pretty(value, indent)
     local value_type = type(value)
 
     if value_type ~= "table" then
-        return string.format("%q", value)
+        return string.format("%s", value)
     end
 
     local spaces = string.rep("    ", indent)
@@ -102,7 +102,7 @@ function table_x.map(t, fn)
     return nt
 end
 
-function table_x.every(t, fn)
+function table_x.all(t, fn)
     for i = 1, #t do
         if not fn(t[i], i) then
             return false
@@ -112,7 +112,7 @@ function table_x.every(t, fn)
     return true
 end
 
-function table_x.some(t, fn)
+function table_x.any(t, fn)
     for i = 1, #t do
         if fn(t[i], i) then
             return true
@@ -150,6 +150,19 @@ function table_x.keys(t)
     end
 
     return new_t
+end
+
+function table_x.shuffle_mut(t)
+    for i = #t, 2, -1 do
+        local j = math.random(i)
+        t[i], t[j] = t[j], t[i]
+    end
+    return t
+end
+
+function table_x.shuffle(t)
+    local copy = table_x.copy(t)
+    return table_x.shuffle_mut(copy)
 end
 
 function table_x.count(t)
