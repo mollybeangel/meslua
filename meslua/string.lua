@@ -1,5 +1,30 @@
 local string_x = {}
 
+local old_index_fn = nil
+local str_literal_mt = nil
+
+function string_x.extend_std()
+    str_literal_mt = getmetatable("")
+
+    old_index_fn = str_literal_mt.__index
+    str_literal_mt.__index = function(str, key)
+        return rawget(string_x, key) or rawget(string, key)
+    end
+
+    setmetatable(string, {
+        __index = function(self, key)
+            return rawget(string_x, key) or rawget(self, key)
+        end
+    })
+end
+
+function string_x.unextend_std()
+    if str_literal_mt then
+        str_literal_mt.__index = old_index_fn
+        setmetatable(string,nil)
+    end
+end
+
 function string_x.sep_case(s, sep)
     return s:gsub("(%u+)(%u%l)", "%1" .. sep .. "%2"):gsub("(%l%d)(%u)", "%1" .. sep .. "%2"):gsub("[%s_-]+", sep):lower()
 end
