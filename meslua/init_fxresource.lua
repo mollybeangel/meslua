@@ -1,10 +1,10 @@
 local lib_name = "meslua"
 
 if type(...) == "number" then
-    meslua = {}
+    _G.meslua = {}
 
     local function load_module(self, name)
-        local chunk = LoadResourceFile(lib_name, string.format("%s.lua", name))
+        local chunk = _G["LoadResourceFile"](lib_name, string.format("%s.lua", name))
         assert(chunk, string.format("Failed to load '%s' resource file from %s", name, lib_name))
         local fn, err = load(chunk)
 
@@ -23,5 +23,5 @@ if type(...) == "number" then
 
     return meslua
 else
-    return require((...):gsub('%.init_fm$', '') .. "." .. "init")
+    return require((...):gsub('%.init_fxresource$', '') .. "." .. "init")
 end
