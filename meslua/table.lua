@@ -1,5 +1,8 @@
 local table_x = {}
 
+local next = next
+local pairs = pairs
+
 function table_x.contains(t, what)
     for i = 1, #t do
         if t[i] == what then return true end
@@ -40,40 +43,39 @@ function table_x.is_array(t)
     return count == n
 end
 
-function table_x.to_string(t)
-    local result = "{ "
-    local delimiter = nil
-    local is_array = table_x.is_array(t)
-    local key_format = "%s = "
+function table_x.pretty(value, indent)
+    indent = indent or 0
 
-    if is_array then
-        key_format = ""
-    else
-        key_format = "%s = "
+    local value_type = type(value)
+
+    if value_type ~= "table" then
+        return string.format("%q", value)
     end
 
-    for key, value in pairs(t) do
-        if type(value) == "table" then
-            delimiter = ""
-            result = result .. string.format("%s = %s%s", key, table_x.to_string(value), delimiter)
-        else
-            delimiter = next(t, key) and "," or ""
+    local spaces = string.rep("    ", indent)
+    local child_spaces = string.rep("    ", indent + 1)
 
-            if type(value) == "string" then
-                value = string.format("\"%s\"", value)
-            end
+    local result = "{\n"
+    local array = table_x.is_array(value)
 
-            result = result .. string.format("%s%s%s", string.format(key_format, key), value, delimiter)
+    for k, v in pairs(value) do
+        result = result .. child_spaces
+
+        if not array then
+            result = result .. "[" .. tostring(k) .. "] = "
         end
+
+        result = result .. table_x.pretty(v, indent + 1) .. ",\n"
     end
 
-    result = result .. " }"
+    result = result .. spaces .. "}"
+
     return result
 end
 
 function table_x.print(t)
     assert(type(t) == "table", "Expected table for table.print")
-    print(table_x.to_string(t))
+    print(table_x.pretty(t))
 end
 
 function table_x.filter(t, fn)
@@ -144,10 +146,20 @@ function table_x.keys(t)
     local new_t = {}
 
     for k, v in next, t do
-        table.insert(new_t,k)
+        table.insert(new_t, k)
     end
 
     return new_t
+end
+
+function table_x.count(t)
+    local c = 0
+
+    for _ in next, t do
+        c = c + 1
+    end
+
+    return c
 end
 
 function table_x.copy(t, should_preserve_mt)

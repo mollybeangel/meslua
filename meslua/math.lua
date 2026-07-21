@@ -1,6 +1,6 @@
 local math_x = {}
 
-local atan2 = math.atan2 or math.atan
+local atan2 = rawget(math,"atan2") or math.atan
 
 function math_x.lerp(x, y, a)
     if x == y then return x end

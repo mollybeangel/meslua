@@ -1,15 +1,17 @@
 local functional = {}
 
+local ipairs = ipairs
+
 function functional.once(fn)
-    local called = false
-    local result = nil
+    local c = false
+    local r = nil
 
     return function(...)
-        if not called then
-            result = fn(...)
-            called = true
+        if not c then
+            r = fn(...)
+            c = true
         end
-        return result
+        return r
     end
 end
 
